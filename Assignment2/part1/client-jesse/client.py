@@ -11,7 +11,7 @@ Fill every TODO.
 """
 
 import os
-import socket
+from socket import *
 import sys
 import time
 
@@ -28,8 +28,9 @@ def connect_once(host: str, port: int) -> socket.socket:
     """Create a TCP connection to the server."""
     if port is None:
         raise ValueError("SERVER_PORT is not set. Provide via env or set a default.")
-    # TODO: choose API: socket.create_connection or manual socket + connect
-    pass
+    client_socket = socket(AF_INET, SOCK_STREAM)
+    client_socket.connect((host, port))
+    return client_socket
 
 
 def main() -> None:
@@ -43,18 +44,13 @@ def main() -> None:
     print(f"[client:{USERNAME}] connected. Type messages; Ctrl+C to quit.")
     try:
         while True:
-            # TODO: get input from user to send it to server
-
-            # TODO: send data
-        
-
-            # TODO: receive response from server and print it
-           
+            payload = input('Enter message: ')
+            sock.send(payload.encode())
+            response = sock.recv(1024)
+            print(f"[client:{USERNAME}] received: {response}")
 
             # OPTIONAL: small delay to make captures easier to read
             time.sleep(0.1)
-
-            break  # TODO: remove this break to keep the loop going
     except KeyboardInterrupt:
         print("\n[client] exiting.")
     except Exception as e:
