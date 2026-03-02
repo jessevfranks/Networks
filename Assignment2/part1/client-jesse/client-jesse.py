@@ -16,13 +16,13 @@ import time
 USERNAME = os.getenv("STUDENT_USERNAME") or "FILL_ME"
 
 ## Fill the correct host and IP detail from the docker compose file or output from helper script file
-SERVER_HOST = None
-SERVER_PORT = None  
+SERVER_HOST = "csci-server-jesse"
+SERVER_PORT = 8084
 
 CONNECT_TIMEOUT = 5  # seconds
 
 
-def connect_once(host: str, port: int) -> socket.socket:
+def connect_once(host: str, port: int) -> socket:
     """Create a TCP connection to the server."""
     if port is None:
         raise ValueError("SERVER_PORT is not set. Provide via env or set a default.")

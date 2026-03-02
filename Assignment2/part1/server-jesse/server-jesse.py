@@ -16,7 +16,7 @@ from typing import Tuple
 
 USERNAME = os.getenv("STUDENT_USERNAME") # <-- put your username (or ensure env is set)
 HOST = "0.0.0.0"  # listen on all interfaces in container
-PORT = 34938
+PORT = 8084
 
 
 def create_listen_socket(host: str, port: int) -> socket.socket:
