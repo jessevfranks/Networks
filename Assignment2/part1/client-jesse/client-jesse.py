@@ -6,8 +6,6 @@ Goals for students:
 - Read user input; prepend username; send bytes; receive echo
 - Observe cleartext payloads in Wireshark on your assigned ports
 - Handle errors & clean shutdown
-
-Fill every TODO.
 """
 
 import os

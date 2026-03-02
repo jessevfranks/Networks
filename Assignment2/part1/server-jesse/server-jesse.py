@@ -6,8 +6,6 @@ Goals for students:
 - Accept connections in a loop
 - Read bytes; echo back; log messages with your username
 - Gracefully handle disconnects and errors
-
-Fill every TODO. Don't copy/paste a finished server.
 """
 
 import os
@@ -18,7 +16,7 @@ from typing import Tuple
 
 USERNAME = os.getenv("STUDENT_USERNAME") # <-- put your username (or ensure env is set)
 HOST = "0.0.0.0"  # listen on all interfaces in container
-PORT = None  #TODO: Fill the correct port obtained from the docker compose file or output from helper script file
+PORT = 34938
 
 
 def create_listen_socket(host: str, port: int) -> socket.socket:
@@ -28,10 +26,8 @@ def create_listen_socket(host: str, port: int) -> socket.socket:
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    # TODO: bind the socket using host IP and port address
-    # s.bind((..., ...))
-    # TODO: start listening on the bound socket (backlog can be 1 or more)
-    # s.listen(...)
+    s.bind((HOST, PORT))
+    s.listen(1)
     return s
 
 
@@ -41,13 +37,13 @@ def handle_client(conn: socket.socket, addr: Tuple[str, int]) -> None:
 
     while True:
         
-        data = None ## TODO: Modify to receive data from client (choose a buffer size, e.g., 4096)
+        data =  conn.recv(1024).decode()
       
         if not data: 
             break
         
         print(f"[server:{USERNAME}] received: {data!r}")
-        # TODO: echo customized message back to client
+        conn.send(data.encode())
  
 
 
@@ -61,16 +57,15 @@ def main() -> None:
     print(f"[server:{USERNAME}] listening on {HOST}:{PORT}")
     while True:
         try:
-            # TODO: accept a connection and handle the client
-       
-            conn, addr = None, None  # TODO: replace with actual accept call
+            conn, addr = lsock.accept()
+            handle_client(conn, addr)
         except KeyboardInterrupt:
             print("\n[server] shutting down (KeyboardInterrupt).")
             break
         except Exception as e:
             print(f"[server:{USERNAME}] error: {e}", file=sys.stderr)
 
-    # TODO: close listening socket
+    lsock.close()
 
 
 if __name__ == "__main__":

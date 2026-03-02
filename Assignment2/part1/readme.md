@@ -118,7 +118,7 @@ Run the following commands to start the client program
 docker compose exec client bash
 
 # inside the container
-python client.py
+python client-jesse.py
 ```
 
 Network Sniffing (**2 Points**)
