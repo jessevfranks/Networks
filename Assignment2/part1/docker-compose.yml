@@ -1,0 +1,40 @@
+version: "3.9" 
+services:
+  server:
+    image: python:3.11-slim
+    container_name: csci-server-jesse
+    working_dir: /app
+    volumes:
+            - ./server-jesse:/app
+    environment:
+            - STUDENT_USERNAME=jesse
+            - APP_PORT=8084
+    command: bash
+    tty: true
+    stdin_open: true
+    networks: [ csci-net-jesse ]
+
+    # host:container
+    ports:
+            - "34938:8084"
+
+
+  client:
+    image: python:3.11-slim
+    container_name: csci-client-jesse
+    working_dir: /app
+    volumes:
+            - ./client-jesse:/app
+    environment:
+            - STUDENT_USERNAME=jesse
+            - SERVER_HOST=csci-server-jesse
+            - SERVER_PORT=8084
+    command: bash
+    tty: true
+    stdin_open: true
+    networks: [ csci-net-jesse ]
+
+
+networks:
+        csci-net-jesse:
+                driver: bridge

@@ -108,7 +108,7 @@ Run the following commands to start the server program
 docker compose exec server bash
 
 # inside the container
-python server.py
+python server-jesse.py
 ```
 
 Run the following commands to start the client program 
