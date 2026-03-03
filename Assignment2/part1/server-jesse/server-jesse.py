@@ -16,7 +16,7 @@ from typing import Tuple
 
 USERNAME = os.getenv("STUDENT_USERNAME") # <-- put your username (or ensure env is set)
 HOST = "0.0.0.0"  # listen on all interfaces in container
-PORT = 8084
+PORT = 8084 # port from docker compose
 
 
 def create_listen_socket(host: str, port: int) -> socket.socket:
@@ -26,8 +26,8 @@ def create_listen_socket(host: str, port: int) -> socket.socket:
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind((HOST, PORT))
-    s.listen(1)
+    s.bind((HOST, PORT)) # bind the socket to the server host/port
+    s.listen(1) # listen on said port for a connection
     return s
 
 
@@ -37,13 +37,13 @@ def handle_client(conn: socket.socket, addr: Tuple[str, int]) -> None:
 
     while True:
         
-        data =  conn.recv(1024).decode()
+        data =  conn.recv(1024).decode() # receive and decode data from the client
       
         if not data: 
             break
         
         print(f"[server:{USERNAME}] received: {data!r}")
-        conn.send(data.encode())
+        conn.send(data.encode()) # send the received data back to the client
  
 
 
@@ -57,15 +57,15 @@ def main() -> None:
     print(f"[server:{USERNAME}] listening on {HOST}:{PORT}")
     while True:
         try:
-            conn, addr = lsock.accept()
-            handle_client(conn, addr)
+            conn, addr = lsock.accept() # accept a connection from a client, creating a connection and address object
+            handle_client(conn, addr) # pass the above objects to our helper function to handle messages
         except KeyboardInterrupt:
             print("\n[server] shutting down (KeyboardInterrupt).")
             break
         except Exception as e:
             print(f"[server:{USERNAME}] error: {e}", file=sys.stderr)
 
-    lsock.close()
+    lsock.close() # close the socket at the end
 
 
 if __name__ == "__main__":
