@@ -11,6 +11,7 @@ Goals for students:
 import os
 import socket
 import sys
+import threading
 from typing import Tuple
 
 
@@ -26,7 +27,7 @@ def create_listen_socket(host: str, port: int) -> socket.socket:
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind((HOST, PORT)) # bind the socket to the server host/port
+    s.bind((host, PORT)) # bind the socket to the server host/port
     s.listen(1) # listen on said port for a connection
     return s
 
@@ -58,7 +59,11 @@ def main() -> None:
     while True:
         try:
             conn, addr = lsock.accept() # accept a connection from a client, creating a connection and address object
-            handle_client(conn, addr) # pass the above objects to our helper function to handle messages
+
+            # handle a new client by starting a new thread
+            client_thread = threading.Thread(target=handle_client, args=(conn, addr))
+            client_thread.start()
+            print(f"[Active connections] {threading.active_count() - 1}")
         except KeyboardInterrupt:
             print("\n[server] shutting down (KeyboardInterrupt).")
             break

@@ -19,9 +19,9 @@ services:
             - "34938:8084"
 
 
-  client:
+  client1:
     image: python:3.11-slim
-    container_name: csci-client-jesse
+    container_name: csci-client-jesse-1
     working_dir: /app
     volumes:
             - ./client-jesse:/app
@@ -29,6 +29,21 @@ services:
             - STUDENT_USERNAME=jesse
             - SERVER_HOST=csci-server-jesse
             - SERVER_PORT=8084
+    command: bash
+    tty: true
+    stdin_open: true
+    networks: [ csci-net-jesse ]
+
+  client2:
+    image: python:3.11-slim
+    container_name: csci-client-jesse-2
+    working_dir: /app
+    volumes:
+      - ./client-jesse:/app
+    environment:
+      - STUDENT_USERNAME=jesse
+      - SERVER_HOST=csci-server-jesse
+      - SERVER_PORT=8084
     command: bash
     tty: true
     stdin_open: true

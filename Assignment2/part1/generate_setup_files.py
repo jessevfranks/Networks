@@ -129,9 +129,24 @@ def main():
                 - "{host_port}:{container_port}"
         
 
-      client:
+      client1:
         image: python:3.11-slim
-        container_name: {client_name}
+        container_name: {client_name}-1
+        working_dir: /app
+        volumes:
+                - ./{client_dir.name}:/app
+        environment:
+                - STUDENT_USERNAME={username}
+                - SERVER_HOST={server_name}
+                - SERVER_PORT={container_port}
+        command: bash
+        tty: true
+        stdin_open: true
+        networks: [ {project_net} ]
+        
+    client2:
+        image: python:3.11-slim
+        container_name: {client_name}-2
         working_dir: /app
         volumes:
                 - ./{client_dir.name}:/app
