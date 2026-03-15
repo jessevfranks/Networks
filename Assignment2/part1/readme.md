@@ -108,7 +108,7 @@ Run the following commands to start the server program
 docker compose exec server bash
 
 # inside the container
-python server.py
+python server-jesse.py
 ```
 
 Run the following commands to start the client program 
@@ -118,7 +118,7 @@ Run the following commands to start the client program
 docker compose exec client bash
 
 # inside the container
-python client.py
+python client-jesse.py
 ```
 
 Network Sniffing (**2 Points**)
@@ -131,7 +131,7 @@ Use a network sniffer such as Wireshark or tcpdump to capture at least 5 message
 - Take screenshots that show: the TCP handshake, an example data exchange (client->server and server->client)
 
 
-Deliverable - Part I (submit to eLC)
+Deliverable (submit to eLC)
 -------------------------
 Include all of the following in a single PDF (the order below is suggested):
 
@@ -142,33 +142,5 @@ Include all of the following in a single PDF (the order below is suggested):
 5. List the following observations : Client IP, Server IP, TCP Seq and ACK numbers.
 
 
-Part II — Proxy or Multi‑client Server (choose one) ( 2 Points)
---------------------------------------------------
 
-Choose one of the two options below and update the docker setup produced by the generator accordingly. Be brief and make implementations testable with the generated compose stack.
-
-**Option A — Proxy as a separate container**
-- Docker changes:
-	- Implement proxy.py in a new proxy-<name>/ folder created alongside server-<name>/ and client-<name>/.  
-		- Listen on PROXY_PORT (env var or constant).  
-		- For each incoming client connection, connect to server through the proxy and forward bytes bidirectionally (simple relay). Log client addr, bytes forwarded, connect/disconnect, and close cleanly on EOF/errors.
-	- Update the docker compose file as needed.
-
-- Tests required:
-	-  Capture screenshots of Proxied session: capture traffic showing client→proxy→server→proxy→client, and show proxy logs reporting bytes forwarded.
-	
-***Option B — Extend server to accept multiple clients**
-- Modify server.py to accept and service concurrent clients. Log per-client events and bytes forwarded/echoed.
-- Docker changes:
-	- Ensure docker-compose.yml allows running multiple client containers so you can test concurrency against the single server container.
-- Tests required:
-	- Show server logs handling multiple simultaneous client connections.
-	- Capture screenshots of netowrk traffic demonstrating distinct TCP flows from each client to the server.
-
-Deliverable - Part II (submit to eLC)
--------------------------
-- Modified/added code: proxy.py (if Option A), updated server.py and/or client.py.
-- Updated docker-compose.yml.
-- Short README paragraph explaining PROXY_PORT, SERVER_PORT, SERVER_HOST, how to start the proxy/server, and how to scale/run multiple clients.
-- Screenshots to demonstrate the tests for the selected option.
 
