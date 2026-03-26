@@ -7,7 +7,7 @@ is more unlikely to have a service running on the port, meaning the "port unreac
 easier to achieve.
 3. The responses I received indicate the hostname, IP address, and the RTT, or that a timeout occurred.  
 The format I have is "hostname (IP address) RTT". When a timeout occurs, a "*" is printed
-4. If a timeout ("*") occurs, that does not mean that subsequent hops will also display "*".  
+4. If a timeout ("\*") occurs, that does not mean that subsequent hops will also display "\*".  
 An individual "*" likely means that the server at that hop chose not to respond to our probe,  
 not that there is necessarily an issue of that it doesn't exist. As TTL increments, servers that do respond  
 be reached, or at least the destination will.
