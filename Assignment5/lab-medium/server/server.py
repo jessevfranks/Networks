@@ -7,22 +7,18 @@ Your server should:
   2. Listen for incoming connections
   3. Accept connections and echo back received data
   4. Handle client disconnections gracefully
-
-TODO: Fill in HOST and PORT values by examining your environment!
 """
 
 import os
 import sys
 import socket
+from datetime import datetime
 from typing import Tuple
 
 USERNAME = os.getenv("STUDENT_USERNAME", "student")
 
-# TODO: Determine the correct values for HOST and PORT
-# Hint: Use 'env' command inside the container to see environment variables
-# Hint: Think about what address allows connections from other containers
-HOST = None  # What address should the server bind to?
-PORT = None  # What port should the server listen on?
+HOST = "0.0.0.0"  # What address should the server bind to?
+PORT = 8275  # What port should the server listen on?
 
 BUFFER_SIZE = 4096
 
@@ -49,12 +45,12 @@ def handle_client(conn: socket.socket, addr: Tuple[str, int]) -> None:
     try:
         while True:
             data = conn.recv(BUFFER_SIZE)
-            
+
             if not data:
                 break
-            
-            print(f"[server:{USERNAME}] Received: {data!r}")
-            
+
+            print(f"[server:{USERNAME}] Received: {data!r} (time: {datetime.now()})")
+
             response = f"[ECHO from {USERNAME}] {data.decode()}".encode()
             conn.sendall(response)
             
