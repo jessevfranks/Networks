@@ -12,6 +12,7 @@ Your client should:
 import os
 import sys
 import socket
+from datetime import datetime
 import time
 
 USERNAME = os.getenv("STUDENT_USERNAME", "student")
@@ -53,7 +54,7 @@ def main():
             
             response = sock.recv(BUFFER_SIZE)
             if response:
-                print(f"  <- {response.decode()}")
+                print(f"  <- {response.decode()} (time: {datetime.now()})")
             
             time.sleep(0.1)
             

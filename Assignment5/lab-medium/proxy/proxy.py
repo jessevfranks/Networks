@@ -15,6 +15,8 @@ Architecture:
 import os
 import sys
 import socket
+from datetime import datetime
+
 import select
 
 USERNAME = os.getenv("STUDENT_USERNAME", "student")
@@ -82,7 +84,7 @@ def handle_connection(client_sock: socket.socket, client_addr: tuple) -> None:
                     
                     server_sock.sendall(data)
                     
-                    print(f"[proxy] CLIENT -> SERVER: {len(data)} bytes")
+                    print(f"[proxy] CLIENT -> SERVER: {len(data)} bytes (time: {datetime.now()})")
                     
                 elif sock is server_sock:
                     data = sock.recv(BUFFER_SIZE)
@@ -92,7 +94,7 @@ def handle_connection(client_sock: socket.socket, client_addr: tuple) -> None:
                     
                     client_sock.sendall(data)
                     
-                    print(f"[proxy] SERVER -> CLIENT: {len(data)} bytes")
+                    print(f"[proxy] SERVER -> CLIENT: {len(data)} bytes (time: {datetime.now()})")
                     
     except Exception as e:
         print(f"[proxy:{USERNAME}] Session ended: {e}")

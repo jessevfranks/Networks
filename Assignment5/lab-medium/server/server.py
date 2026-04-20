@@ -12,6 +12,7 @@ Your server should:
 import os
 import sys
 import socket
+from datetime import datetime
 from typing import Tuple
 
 USERNAME = os.getenv("STUDENT_USERNAME", "student")
@@ -44,12 +45,12 @@ def handle_client(conn: socket.socket, addr: Tuple[str, int]) -> None:
     try:
         while True:
             data = conn.recv(BUFFER_SIZE)
-            
+
             if not data:
                 break
-            
-            print(f"[server:{USERNAME}] Received: {data!r}")
-            
+
+            print(f"[server:{USERNAME}] Received: {data!r} (time: {datetime.now()})")
+
             response = f"[ECHO from {USERNAME}] {data.decode()}".encode()
             conn.sendall(response)
             
