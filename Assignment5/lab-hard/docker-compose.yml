@@ -1,0 +1,106 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# NETWORK DEBUGGING LAB - HARD
+# Generated for: FRANKS
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Your mission: Get the client talking to the server through the proxy!
+#
+# TO START:
+#   docker compose up -d
+#   docker compose exec server bash
+#   docker compose exec proxy bash
+#   docker compose exec client bash
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+version: "3.9"
+
+services:
+  server:
+    image: python:3.11-slim
+    container_name: hard-server-franks
+    hostname: server
+    working_dir: /app
+    volumes:
+      - ./server:/app
+    environment:
+      - STUDENT_USERNAME=FRANKS
+      - APP_PORT=8304
+    command: bash
+    tty: true
+    stdin_open: true
+    networks:
+      backend_net:
+        ipv4_address: 172.39.0.136
+    entrypoint: >
+      bash -c "apt-get update -qq && apt-get install -y -qq iputils-ping netcat-openbsd tcpdump iproute2 dnsutils > /dev/null 2>&1; exec bash"
+
+  proxy:
+    image: python:3.11-slim
+    container_name: hard-proxy-franks
+    hostname: proxy
+    working_dir: /app
+    volumes:
+      - ./proxy:/app
+    environment:
+      - STUDENT_USERNAME=FRANKS
+      - PROXY_PORT=8304
+      - SERVER_HOST=server
+      - SERVER_PORT=8304
+    command: bash
+    tty: true
+    stdin_open: true
+    cap_add:
+      - NET_ADMIN
+    networks:
+      frontend_net:
+        ipv4_address: 172.16.0.38
+      backend_net:
+        ipv4_address: 172.39.0.193
+    depends_on:
+      - server
+    entrypoint: >
+      bash -c "apt-get update -qq && apt-get install -y -qq iputils-ping netcat-openbsd tcpdump iproute2 dnsutils iptables > /dev/null 2>&1; iptables -A OUTPUT -p tcp --dport 8304 -j DROP; exec bash"
+
+  client:
+    image: python:3.11-slim
+    container_name: hard-client-franks
+    hostname: client
+    working_dir: /app
+    volumes:
+      - ./client:/app
+    environment:
+      - STUDENT_USERNAME=FRANKS
+      - PROXY_HOST=proxy-server
+      - PROXY_PORT=8304
+    command: bash
+    tty: true
+    stdin_open: true
+    cap_add:
+      - NET_ADMIN
+    networks:
+      frontend_net:
+        ipv4_address: 172.16.0.48
+    depends_on:
+      - proxy
+    entrypoint: >
+      bash -c "apt-get update -qq && apt-get install -y -qq iputils-ping netcat-openbsd tcpdump iproute2 dnsutils > /dev/null 2>&1; ip route del default 2>/dev/null || true; ip route add default via 172.16.0.254; exec bash"
+
+networks:
+  frontend_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1
+    driver_opts:
+      com.docker.network.driver.mtu: 1500
+
+  backend_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.39.0.0/24
+          gateway: 172.39.0.1
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
