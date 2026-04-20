@@ -90,7 +90,7 @@ def handle_connection(client_sock: socket.socket, client_addr: tuple) -> None:
                     if not data:
                         raise ConnectionError("Server disconnected")
                     
-                    sock.sendall(data)
+                    client_sock.sendall(data)
                     
                     print(f"[proxy] SERVER -> CLIENT: {len(data)} bytes")
                     

@@ -60,7 +60,7 @@ services:
     depends_on:
       - server
     entrypoint: >
-      bash -c "apt-get update -qq && apt-get install -y -qq iputils-ping netcat-openbsd tcpdump iproute2 dnsutils iptables > /dev/null 2>&1; iptables -A OUTPUT -p tcp --dport 8275 -j DROP; exec bash"
+      bash -c "apt-get update -qq && apt-get install -y -qq iputils-ping netcat-openbsd tcpdump iproute2 dnsutils iptables > /dev/null 2>&1; exec bash"
 
   client:
     image: python:3.11-slim
@@ -71,7 +71,7 @@ services:
       - ./client:/app
     environment:
       - STUDENT_USERNAME=FRANKS
-      - PROXY_HOST=proxy-server
+      - PROXY_HOST=proxy
       - PROXY_PORT=8275
     command: bash
     tty: true

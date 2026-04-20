@@ -16,7 +16,7 @@ from typing import Tuple
 
 USERNAME = os.getenv("STUDENT_USERNAME", "student")
 
-HOST = "proxy"  # What address should the server bind to?
+HOST = "0.0.0.0"  # What address should the server bind to?
 PORT = 8275  # What port should the server listen on?
 
 BUFFER_SIZE = 4096
