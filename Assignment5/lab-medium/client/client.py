@@ -7,8 +7,6 @@ Your client should:
   2. Send user input as messages
   3. Receive and display the echoed response
   4. Handle errors gracefully
-
-TODO: Fill in PROXY_HOST and PROXY_PORT values by examining your environment!
 """
 
 import os
@@ -18,11 +16,8 @@ import time
 
 USERNAME = os.getenv("STUDENT_USERNAME", "student")
 
-# TODO: Determine the correct values for PROXY_HOST and PROXY_PORT
-# Hint: Use 'env' command inside the container to see environment variables
-# Hint: The client connects to the PROXY, not directly to the server
-PROXY_HOST = None  # What is the proxy hostname?
-PROXY_PORT = None  # What port is the proxy listening on?
+PROXY_HOST = "proxy"  # What is the proxy hostname?
+PROXY_PORT = 8275  # What port is the proxy listening on?
 
 BUFFER_SIZE = 4096
 

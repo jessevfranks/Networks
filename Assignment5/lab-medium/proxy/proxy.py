@@ -22,11 +22,9 @@ USERNAME = os.getenv("STUDENT_USERNAME", "student")
 # The proxy listens on all interfaces
 LISTEN_HOST = "0.0.0.0"
 
-# TODO: Read configuration from environment variables
-# Hint: Use 'env' command inside the container to see what's available
-LISTEN_PORT = None  # What port should the proxy listen on?
-SERVER_HOST = None  # What is the backend server's hostname?
-SERVER_PORT = None  # What port is the backend server listening on?
+LISTEN_PORT = 8275  # What port should the proxy listen on?
+SERVER_HOST = "server"  # What is the backend server's hostname?
+SERVER_PORT = 8275 # What port is the backend server listening on?
 
 BUFFER_SIZE = 4096
 
@@ -38,10 +36,10 @@ def create_listen_socket() -> socket.socket:
     
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    
-    # TODO: Bind the socket to (LISTEN_HOST, LISTEN_PORT)
-    
-    # TODO: Start listening for connections (backlog of 5 is fine)
+
+    sock.bind((LISTEN_HOST, LISTEN_PORT))
+
+    sock.listen(5)
     
     print(f"[proxy:{USERNAME}] Listening on {LISTEN_HOST}:{LISTEN_PORT}")
     return sock
@@ -55,9 +53,8 @@ def handle_connection(client_sock: socket.socket, client_addr: tuple) -> None:
         print("[proxy] ERROR: Backend server not configured!")
         client_sock.close()
         return
-    
-    # TODO: Connect to the backend server
-    server_sock = None
+
+    server_sock = socket.create_connection((SERVER_HOST, SERVER_PORT), timeout=10)
     
     if server_sock is None:
         print("[proxy] ERROR: Server connection not implemented!")
@@ -78,24 +75,22 @@ def handle_connection(client_sock: socket.socket, client_addr: tuple) -> None:
             
             for sock in readable:
                 if sock is client_sock:
-                    # TODO: Receive data from client
-                    data = None
+                    data = sock.recv(BUFFER_SIZE)
                     
                     if not data:
                         raise ConnectionError("Client disconnected")
                     
-                    # TODO: Forward data to server
+                    server_sock.sendall(data)
                     
                     print(f"[proxy] CLIENT -> SERVER: {len(data)} bytes")
                     
                 elif sock is server_sock:
-                    # TODO: Receive data from server
-                    data = None
+                    data = sock.recv(BUFFER_SIZE)
                     
                     if not data:
                         raise ConnectionError("Server disconnected")
                     
-                    # TODO: Forward data to client
+                    sock.sendall(data)
                     
                     print(f"[proxy] SERVER -> CLIENT: {len(data)} bytes")
                     
@@ -116,9 +111,7 @@ def main():
     
     while True:
         try:
-            # TODO: Accept incoming connection
-            
-            client_sock, client_addr = None, None
+            client_sock, client_addr = sock.accept()
             
             if client_sock:
                 handle_connection(client_sock, client_addr)
